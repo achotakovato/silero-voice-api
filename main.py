@@ -26,8 +26,6 @@ tts_model, example_text = torch.hub.load(
 	)
     tts_model.to("cpu")
     tts_speakers = example_text.speakers
-    tts_model.to("cpu")
-    tts_speakers = example_text.speakers
     
     # STT
     stt_model, utils = torch.hub.load(
