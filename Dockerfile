@@ -2,8 +2,9 @@ FROM python:3.10-slim
 
 WORKDIR /app
 
-# Системные зависимости
-RUN apt-get update && apt-get install -y --no-install-recommends \
+# Обновляем pip и ставим системные зависимости
+RUN pip install --upgrade pip && \
+    apt-get update && apt-get install -y --no-install-recommends \
     gcc g++ libsndfile1 ffmpeg \
     && rm -rf /var/lib/apt/lists/*
 
@@ -14,7 +15,7 @@ RUN pip install --no-cache-dir -r requirements.txt
 # Копируем код
 COPY . .
 
-# Оптимизация памяти
+# Оптимизация памяти для CPU
 ENV PYTORCH_NO_CUDA=1
 ENV OMP_NUM_THREADS=1
 ENV MKL_NUM_THREADS=1
