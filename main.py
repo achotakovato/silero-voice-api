@@ -17,12 +17,15 @@ def load_models():
     global tts_model, stt_model, tts_speakers
     
     # TTS
-    tts_model, example_text = torch.hub.load(
-        repo_or_dir="snakers4/silero-models",
-        model="silero_tts",
-        language="ru",
-        speaker="kseniya"
-    )
+tts_model, example_text = torch.hub.load(
+    repo_or_dir="snakers4/silero-models",
+    model="silero_tts",
+    language="ru",
+    speaker="kseniya",
+    trust_repo=True  # <-- обязательно
+	)
+    tts_model.to("cpu")
+    tts_speakers = example_text.speakers
     tts_model.to("cpu")
     tts_speakers = example_text.speakers
     
