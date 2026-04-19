@@ -11,19 +11,23 @@ app = FastAPI(title="Silero Voice API")
 torch.set_num_threads(1)
 os.environ["OMP_NUM_THREADS"] = "1"
 
-# Загрузка моделей при старте
+# Глобальные переменные для моделей
+tts_model = None
+stt_model = None
+tts_speakers = None
+
 @app.on_event("startup")
 def load_models():
     global tts_model, stt_model, tts_speakers
     
     # TTS
-tts_model, example_text = torch.hub.load(
-    repo_or_dir="snakers4/silero-models",
-    model="silero_tts",
-    language="ru",
-    speaker="kseniya",
-    trust_repo=True  # <-- обязательно
-	)
+    tts_model, example_text = torch.hub.load(
+        repo_or_dir="snakers4/silero-models",
+        model="silero_tts",
+        language="ru",
+        speaker="kseniya",
+        trust_repo=True
+    )
     tts_model.to("cpu")
     tts_speakers = example_text.speakers
     
@@ -57,3 +61,7 @@ async def speech_to_text(file: UploadFile):
         
     text = stt_model(waveform.squeeze())
     return {"text": text}
+
+if __name__ == "__main__":
+    import uvicorn
+    uvicorn.run(app, host="0.0.0.0", port=8000)
